@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Subject - Student Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fas fa-plus"></i> Add New Subject</h1>
+        <a href="{{ url_for('subjects') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Subjects
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('add_subject') }}">
+        <div class="form-group">
+            <label for="subject_name"><i class="fas fa-book"></i> Subject Name *</label>
+            <input type="text" id="subject_name" name="subject_name" required placeholder="Enter subject name">
+        </div>
+
+        <div class="form-group">
+            <label for="course"><i class="fas fa-graduation-cap"></i> Course *</label>
+            <select id="course" name="course" required>
+                <option value="">Select Course</option>
+                <option value="BE">BE (Bachelor of Engineering)</option>
+                <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+                <option value="BTech">BTech (Bachelor of Technology)</option>
+                <option value="BSc">BSc (Bachelor of Science)</option>
+                <option value="MCA">MCA (Master of Computer Applications)</option>
+                <option value="MTech">MTech (Master of Technology)</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check"></i> Add Subject
+            </button>
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

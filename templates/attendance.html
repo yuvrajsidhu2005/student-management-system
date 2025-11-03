@@ -1,8 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Attendance Records</h2>
+<h2>📅 Attendance Records</h2>
 
+<!-- Add Attendance Form -->
+<div class="add-form">
+    <h3>➕ Mark Attendance</h3>
+    <form method="POST" action="{{ url_for('add_attendance') }}">
+        <select name="student_id" required>
+            <option value="">Select Student</option>
+            {% for student in students %}
+            <option value="{{ student['StudentID'] }}">{{ student['Name'] }} (ID: {{ student['StudentID'] }})</option>
+            {% endfor %}
+        </select>
+        
+        <input type="date" name="date" required>
+        
+        <select name="status" required>
+            <option value="">Select Status</option>
+            <option value="Present">✅ Present</option>
+            <option value="Absent">❌ Absent</option>
+        </select>
+        
+        <button type="submit">Mark Attendance</button>
+    </form>
+</div>
+
+<!-- Attendance Table -->
 <table class="data-table">
     <thead>
         <tr>
@@ -10,6 +34,7 @@
             <th>Student Name</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +48,18 @@
                     {{ record['Status'] }}
                 </span>
             </td>
+            <td class="action-buttons">
+                <a href="{{ url_for('delete_attendance', id=record['AttendanceID']) }}" 
+                   class="btn-delete" 
+                   onclick="return confirm('Are you sure you want to delete this attendance record?')">🗑️ Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{% if attendance|length == 0 %}
+<p class="no-data">No attendance records yet. Mark attendance using the form above.</p>
+{% endif %}
+
 {% endblock %}

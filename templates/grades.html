@@ -1,26 +1,68 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Grade Records</h2>
+<h2>📊 Grade Records</h2>
 
+<!-- Add Grade Form -->
+<div class="add-form">
+    <h3>➕ Add New Grade</h3>
+    <form method="POST" action="{{ url_for('add_grade') }}">
+        <select name="student_id" required>
+            <option value="">Select Student</option>
+            {% for student in students %}
+            <option value="{{ student['StudentID'] }}">{{ student['Name'] }} (ID: {{ student['StudentID'] }})</option>
+            {% endfor %}
+        </select>
+        
+        <select name="subject_id" required>
+            <option value="">Select Subject</option>
+            {% for subject in subjects %}
+            <option value="{{ subject['SubjectID'] }}">{{ subject['SubjectName'] }}</option>
+            {% endfor %}
+        </select>
+        
+        <input type="number" name="marks" placeholder="Marks (0-100)" min="0" max="100" required>
+        
+        <button type="submit">Add Grade</button>
+    </form>
+</div>
+
+<!-- Grades Table -->
 <table class="data-table">
     <thead>
         <tr>
             <th>Grade ID</th>
+            <th>Student ID</th>
             <th>Student Name</th>
             <th>Subject</th>
             <th>Marks</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for grade in grades %}
         <tr>
             <td>{{ grade['GradeID'] }}</td>
+            <td>{{ grade['StudentID'] }}</td>
             <td>{{ grade['Name'] }}</td>
             <td>{{ grade['SubjectName'] }}</td>
-            <td>{{ grade['Marks'] }}</td>
+            <td>
+                <span class="marks-badge {% if grade['Marks'] >= 75 %}excellent{% elif grade['Marks'] >= 60 %}good{% elif grade['Marks'] >= 40 %}average{% else %}poor{% endif %}">
+                    {{ grade['Marks'] }}
+                </span>
+            </td>
+            <td class="action-buttons">
+                <a href="{{ url_for('delete_grade', id=grade['GradeID']) }}" 
+                   class="btn-delete" 
+                   onclick="return confirm('Are you sure you want to delete this grade?')">🗑️ Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{% if grades|length == 0 %}
+<p class="no-data">No grades recorded yet. Add grades using the form above.</p>
+{% endif %}
+
 {% endblock %}

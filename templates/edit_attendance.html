@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Attendance - Student Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fas fa-edit"></i> Edit Attendance</h1>
+        <a href="{{ url_for('attendance') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Attendance
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('edit_attendance', id=attendance.AttendanceID) }}">
+        <div class="form-group">
+            <label for="student_id"><i class="fas fa-user-graduate"></i> Select Student *</label>
+            <select id="student_id" name="student_id" required>
+                <option value="">Select Student</option>
+                {% for student in students %}
+                <option value="{{ student.StudentID }}" {% if student.StudentID == attendance.StudentID %}selected{% endif %}>
+                    {{ student.Name }} ({{ student.Course }} - Year {{ student.Year }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date"><i class="fas fa-calendar"></i> Date *</label>
+            <input type="date" id="date" name="date" value="{{ attendance.Date }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status"><i class="fas fa-check-circle"></i> Attendance Status *</label>
+            <select id="status" name="status" required>
+                <option value="">Select Status</option>
+                <option value="Present" {% if attendance.Status == 'Present' %}selected{% endif %}>Present</option>
+                <option value="Absent" {% if attendance.Status == 'Absent' %}selected{% endif %}>Absent</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Update Attendance
+            </button>
+            <a href="{{ url_for('attendance') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

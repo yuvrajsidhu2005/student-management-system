@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>✏️ Edit Student</h2>
+
+<div class="edit-form">
+    <form method="POST" action="{{ url_for('update_student', id=student['StudentID']) }}">
+        <div class="form-group">
+            <label>Student ID:</label>
+            <input type="text" value="{{ student['StudentID'] }}" disabled>
+        </div>
+        
+        <div class="form-group">
+            <label>Full Name:</label>
+            <input type="text" name="name" value="{{ student['Name'] }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email" value="{{ student['Email'] }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Course:</label>
+            <select name="course" required>
+                <option value="BE" {% if student['Course'] == 'BE' %}selected{% endif %}>BE</option>
+                <option value="BCA" {% if student['Course'] == 'BCA' %}selected{% endif %}>BCA</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Year:</label>
+            <input type="number" name="year" value="{{ student['Year'] }}" min="1" max="4" required>
+        </div>
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn-save">💾 Save Changes</button>
+            <a href="{{ url_for('students') }}" class="btn-cancel">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,19 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Student Records</h2>
+<h2>👥 Student Records</h2>
 
+<!-- Search and Filter Section -->
+<div class="search-section">
+    <form method="GET" action="{{ url_for('students') }}" class="search-form">
+        <input type="text" name="search" placeholder="🔍 Search by Name, Email or ID..." value="{{ search }}" class="search-input">
+        <select name="course" class="filter-select">
+            <option value="">All Courses</option>
+            <option value="BE" {% if course_filter == 'BE' %}selected{% endif %}>BE</option>
+            <option value="BCA" {% if course_filter == 'BCA' %}selected{% endif %}>BCA</option>
+        </select>
+        <button type="submit" class="search-btn">Search</button>
+        <a href="{{ url_for('students') }}" class="reset-btn">Clear</a>
+    </form>
+</div>
+
+<!-- Add Student Form -->
 <div class="add-form">
-    <h3>Add New Student</h3>
+    <h3>➕ Add New Student</h3>
     <form method="POST" action="{{ url_for('add_student') }}">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="course" placeholder="Course (BE/BCA)" required>
-        <input type="number" name="year" placeholder="Year" required>
+        <input type="text" name="name" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+        <select name="course" required>
+            <option value="">Select Course</option>
+            <option value="BE">BE (Bachelor of Engineering)</option>
+            <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+        </select>
+        <input type="number" name="year" placeholder="Year (1-4)" min="1" max="4" required>
         <button type="submit">Add Student</button>
     </form>
 </div>
 
+<!-- Students Table -->
 <table class="data-table">
     <thead>
         <tr>
@@ -22,6 +42,7 @@
             <th>Email</th>
             <th>Course</th>
             <th>Year</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -30,10 +51,21 @@
             <td>{{ student['StudentID'] }}</td>
             <td>{{ student['Name'] }}</td>
             <td>{{ student['Email'] }}</td>
-            <td>{{ student['Course'] }}</td>
+            <td><span class="course-badge">{{ student['Course'] }}</span></td>
             <td>{{ student['Year'] }}</td>
+            <td class="action-buttons">
+                <a href="{{ url_for('edit_student', id=student['StudentID']) }}" class="btn-edit">✏️ Edit</a>
+                <a href="{{ url_for('delete_student', id=student['StudentID']) }}" 
+                   class="btn-delete" 
+                   onclick="return confirm('Are you sure you want to delete {{ student['Name'] }}?')">🗑️ Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{% if students|length == 0 %}
+<p class="no-data">No students found. Try a different search or add new students.</p>
+{% endif %}
+
 {% endblock %}

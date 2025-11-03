@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Grade - Student Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fas fa-edit"></i> Edit Grade</h1>
+        <a href="{{ url_for('grades') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Grades
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('edit_grade', id=grade.GradeID) }}">
+        <div class="form-group">
+            <label for="student_id"><i class="fas fa-user-graduate"></i> Select Student *</label>
+            <select id="student_id" name="student_id" required>
+                <option value="">Select Student</option>
+                {% for student in students %}
+                <option value="{{ student.StudentID }}" {% if student.StudentID == grade.StudentID %}selected{% endif %}>
+                    {{ student.Name }} ({{ student.Course }} - Year {{ student.Year }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="subject_id"><i class="fas fa-book"></i> Select Subject *</label>
+            <select id="subject_id" name="subject_id" required>
+                <option value="">Select Subject</option>
+                {% for subject in subjects %}
+                <option value="{{ subject.SubjectID }}" {% if subject.SubjectID == grade.SubjectID %}selected{% endif %}>
+                    {{ subject.SubjectName }} ({{ subject.Course }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="marks"><i class="fas fa-star"></i> Marks (0-100) *</label>
+            <input type="number" id="marks" name="marks" min="0" max="100" value="{{ grade.Marks }}" required placeholder="Enter marks">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Update Grade
+            </button>
+            <a href="{{ url_for('grades') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Report Cards - Student Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fas fa-file-alt"></i> Student Report Cards</h1>
+    </div>
+</div>
+
+{% for data in report_data %}
+<div class="report-card">
+    <div class="report-header">
+        <h1>Student Report Card</h1>
+        <p>Academic Performance Report</p>
+    </div>
+
+    <div class="student-info">
+        <div class="info-item">
+            <strong>Student Name:</strong>
+            <span>{{ data.student.Name }}</span>
+        </div>
+        <div class="info-item">
+            <strong>Student ID:</strong>
+            <span>{{ data.student.StudentID }}</span>
+        </div>
+        <div class="info-item">
+            <strong>Email:</strong>
+            <span>{{ data.student.Email }}</span>
+        </div>
+        <div class="info-item">
+            <strong>Course:</strong>
+            <span>{{ data.student.Course }}</span>
+        </div>
+        <div class="info-item">
+            <strong>Year:</strong>
+            <span>Year {{ data.student.Year }}</span>
+        </div>
+    </div>
+
+    <div class="grades-table">
+        <h3><i class="fas fa-star"></i> Subject-wise Performance</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Name</th>
+                        <th>Marks</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in data.grades %}
+                    <tr>
+                        <td>{{ grade.SubjectName }}</td>
+                        <td><strong>{{ grade.Marks }}</strong></td>
+                        <td>
+                            {% if grade.Marks >= 90 %}
+                                <span class="badge badge-grade-a">A+</span>
+                            {% elif grade.Marks >= 80 %}
+                                <span class="badge badge-grade-a">A</span>
+                            {% elif grade.Marks >= 70 %}
+                                <span class="badge badge-grade-b">B</span>
+                            {% elif grade.Marks >= 60 %}
+                                <span class="badge badge-grade-c">C</span>
+                            {% elif grade.Marks >= 50 %}
+                                <span class="badge badge-grade-d">D</span>
+                            {% else %}
+                                <span class="badge badge-grade-f">F</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="empty-state">No grades available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <div class="summary-item">
+            <h3>{{ data.total_marks }}</h3>
+            <p>Total Marks</p>
+        </div>
+        <div class="summary-item">
+            <h3>{{ data.average }}%</h3>
+            <p>Average Percentage</p>
+        </div>
+        <div class="summary-item">
+            <h3>{{ data.grade }}</h3>
+            <p>Overall Grade</p>
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <div class="summary-item">
+            <h3>{{ data.attendance_present }}/{{ data.attendance_total }}</h3>
+            <p>Days Present</p>
+        </div>
+        <div class="summary-item">
+            <h3>{{ data.attendance_percentage }}%</h3>
+            <p>Attendance Rate</p>
+        </div>
+        <div class="summary-item">
+            <h3>
+                {% if data.attendance_percentage >= 75 %}
+                    <i class="fas fa-check-circle" style="color: #38ef7d;"></i>
+                {% else %}
+                    <i class="fas fa-exclamation-circle" style="color: #f45c43;"></i>
+                {% endif %}
+            </h3>
+            <p>
+                {% if data.attendance_percentage >= 75 %}
+                    Eligible
+                {% else %}
+                    Not Eligible
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="print-button">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i> Print Report Card
+        </button>
+    </div>
+</div>
+
+{% if not loop.last %}
+<hr style="margin: 40px 0; border: none; border-top: 3px dashed #ddd;">
+{% endif %}
+
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <h3>No Report Cards Available</h3>
+        <p>Add students and grades to generate report cards</p>
+        <div class="btn-group">
+            <a href="{{ url_for('add_student') }}" class="btn btn-primary">Add Student</a>
+            <a href="{{ url_for('add_grade') }}" class="btn btn-success">Add Grade</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

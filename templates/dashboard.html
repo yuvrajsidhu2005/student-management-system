@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Student Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fas fa-chart-line"></i> Dashboard Overview</h1>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_students }}</h3>
+            <p>Total Students</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-book"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_subjects }}</h3>
+            <p>Total Subjects</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_grades }}</h3>
+            <p>Total Grades</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-percentage"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ average_marks }}%</h3>
+            <p>Average Marks</p>
+        </div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card">
+        <h3><i class="fas fa-calendar-check"></i> Attendance Statistics</h3>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Total Records</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>Attendance Rate</th>
+                </tr>
+                <tr>
+                    <td>{{ attendance_stats.total_records }}</td>
+                    <td><span class="badge badge-present">{{ attendance_stats.present_count }}</span></td>
+                    <td><span class="badge badge-absent">{{ attendance_stats.absent_count }}</span></td>
+                    <td>
+                        {% if attendance_stats.total_records > 0 %}
+                            {{ "%.2f"|format((attendance_stats.present_count / attendance_stats.total_records) * 100) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3><i class="fas fa-trophy"></i> Top Performers</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Average Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for performer in top_performers %}
+                    <tr>
+                        <td>{{ performer.Name }}</td>
+                        <td><strong>{{ "%.2f"|format(performer.average) }}%</strong></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="empty-state">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title"><i class="fas fa-users"></i> Recent Students</h2>
+        <a href="{{ url_for('students') }}" class="btn btn-primary">View All Students</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in recent_students %}
+                <tr>
+                    <td>{{ student.StudentID }}</td>
+                    <td>{{ student.Name }}</td>
+                    <td>{{ student.Email }}</td>
+                    <td>{{ student.Course }}</td>
+                    <td>{{ student.Year }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No students found</h3>
+                            <p>Add your first student to get started</p>
+                            <a href="{{ url_for('add_student') }}" class="btn btn-primary">Add Student</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,14 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Subject Information</h2>
+<h2>📚 Subject Information</h2>
 
+<!-- Filter Section -->
+<div class="search-section">
+    <form method="GET" action="{{ url_for('subjects') }}" class="search-form">
+        <select name="course" class="filter-select">
+            <option value="">All Courses</option>
+            <option value="BE" {% if course_filter == 'BE' %}selected{% endif %}>BE</option>
+            <option value="BCA" {% if course_filter == 'BCA' %}selected{% endif %}>BCA</option>
+        </select>
+        <button type="submit" class="search-btn">Filter</button>
+        <a href="{{ url_for('subjects') }}" class="reset-btn">Clear</a>
+    </form>
+</div>
+
+<!-- Add Subject Form -->
+<div class="add-form">
+    <h3>➕ Add New Subject</h3>
+    <form method="POST" action="{{ url_for('add_subject') }}">
+        <input type="text" name="subject_name" placeholder="Subject Name (e.g., Data Structures)" required>
+        <select name="course" required>
+            <option value="">Select Course</option>
+            <option value="BE">BE (Bachelor of Engineering)</option>
+            <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+        </select>
+        <button type="submit">Add Subject</button>
+    </form>
+</div>
+
+<!-- Subjects Table -->
 <table class="data-table">
     <thead>
         <tr>
             <th>Subject ID</th>
             <th>Subject Name</th>
             <th>Course</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -16,9 +45,15 @@
         <tr>
             <td>{{ subject['SubjectID'] }}</td>
             <td>{{ subject['SubjectName'] }}</td>
-            <td>{{ subject['Course'] }}</td>
+            <td><span class="course-badge">{{ subject['Course'] }}</span></td>
+            <td class="action-buttons">
+                <a href="{{ url_for('delete_subject', id=subject['SubjectID']) }}" 
+                   class="btn-delete" 
+                   onclick="return confirm('Are you sure you want to delete {{ subject['SubjectName'] }}?')">🗑️ Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
 {% endblock %}
