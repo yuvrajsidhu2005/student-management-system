@@ -44,7 +44,7 @@
         <tr>
             <td>{{ grade['GradeID'] }}</td>
             <td>{{ grade['StudentID'] }}</td>
-            <td>{{ grade['Name'] }}</td>
+            <td>{{ grade['StudentName'] }}</td>
             <td>{{ grade['SubjectName'] }}</td>
             <td>
                 <span class="marks-badge {% if grade['Marks'] >= 75 %}excellent{% elif grade['Marks'] >= 60 %}good{% elif grade['Marks'] >= 40 %}average{% else %}poor{% endif %}">

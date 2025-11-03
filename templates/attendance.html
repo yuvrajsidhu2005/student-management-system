@@ -41,7 +41,7 @@
         {% for record in attendance %}
         <tr>
             <td>{{ record['AttendanceID'] }}</td>
-            <td>{{ record['Name'] }}</td>
+            <td>{{ record['StudentName'] }}</td>
             <td>{{ record['Date'] }}</td>
             <td>
                 <span class="status-badge {{ 'present' if record['Status'] == 'Present' else 'absent' }}">
