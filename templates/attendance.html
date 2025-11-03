@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Attendance Records</h2>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Attendance ID</th>
+            <th>Student Name</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in attendance %}
+        <tr>
+            <td>{{ record['AttendanceID'] }}</td>
+            <td>{{ record['Name'] }}</td>
+            <td>{{ record['Date'] }}</td>
+            <td>
+                <span class="status-badge {{ 'present' if record['Status'] == 'Present' else 'absent' }}">
+                    {{ record['Status'] }}
+                </span>
+            </td>
+        </tr>

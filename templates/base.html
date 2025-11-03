@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Management System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Student Management System</h1>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('students') }}">Students</a></li>
+                <li><a href="{{ url_for('subjects') }}">Subjects</a></li>
+                <li><a href="{{ url_for('grades') }}">Grades</a></li>
+                <li><a href="{{ url_for('attendance') }}">Attendance</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Student Management System | Yuvraj Singh Sidhu (24BCS10816) | Chandigarh University</p>
+    </footer>
+</body>
+</html>

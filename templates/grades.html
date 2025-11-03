@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Grade Records</h2>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Grade ID</th>
+            <th>Student Name</th>
+            <th>Subject</th>
+            <th>Marks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for grade in grades %}
+        <tr>
+            <td>{{ grade['GradeID'] }}</td>
+            <td>{{ grade['Name'] }}</td>
+            <td>{{ grade['SubjectName'] }}</td>
+            <td>{{ grade['Marks'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
