@@ -1,19 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here_change_this_in_production'
 
+
 DATABASE = 'student_management.db'
+
 
 def get_db_connection():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -48,6 +53,7 @@ def dashboard():
                          recent_students=recent_students,
                          top_performers=top_performers)
 
+
 @app.route('/students')
 def students():
     search = request.args.get('search', '')
@@ -59,6 +65,7 @@ def students():
         students = conn.execute('SELECT * FROM Student').fetchall()
     conn.close()
     return render_template('students.html', students=students, search=search)
+
 
 @app.route('/students/add', methods=['GET', 'POST'])
 def add_student():
@@ -74,6 +81,7 @@ def add_student():
         flash('Student added successfully!', 'success')
         return redirect(url_for('students'))
     return render_template('add_student.html')
+
 
 @app.route('/students/edit/<int:id>', methods=['GET', 'POST'])
 def edit_student(id):
@@ -93,6 +101,27 @@ def edit_student(id):
     conn.close()
     return render_template('edit_student.html', student=student)
 
+
+@app.route('/students/update/<int:id>', methods=['POST'])
+def update_student(id):
+    conn = get_db_connection()
+    
+    # Get form data
+    name = request.form['name']
+    email = request.form['email']
+    course = request.form['course']
+    year = request.form['year']
+    
+    # Update student in database
+    conn.execute('UPDATE Student SET Name = ?, Email = ?, Course = ?, Year = ? WHERE StudentID = ?',
+                 (name, email, course, year, id))
+    conn.commit()
+    conn.close()
+    
+    flash('Student updated successfully!', 'success')
+    return redirect(url_for('students'))
+
+
 @app.route('/students/delete/<int:id>')
 def delete_student(id):
     conn = get_db_connection()
@@ -101,6 +130,7 @@ def delete_student(id):
     conn.close()
     flash('Student deleted successfully!', 'success')
     return redirect(url_for('students'))
+
 
 @app.route('/subjects')
 def subjects():
@@ -114,6 +144,7 @@ def subjects():
     conn.close()
     return render_template('subjects.html', subjects=subjects, search=search)
 
+
 @app.route('/subjects/add', methods=['GET', 'POST'])
 def add_subject():
     if request.method == 'POST':
@@ -126,6 +157,7 @@ def add_subject():
         flash('Subject added successfully!', 'success')
         return redirect(url_for('subjects'))
     return render_template('add_subject.html')
+
 
 @app.route('/subjects/edit/<int:id>', methods=['GET', 'POST'])
 def edit_subject(id):
@@ -142,6 +174,7 @@ def edit_subject(id):
     conn.close()
     return render_template('edit_subject.html', subject=subject)
 
+
 @app.route('/subjects/delete/<int:id>')
 def delete_subject(id):
     conn = get_db_connection()
@@ -150,6 +183,7 @@ def delete_subject(id):
     conn.close()
     flash('Subject deleted successfully!', 'success')
     return redirect(url_for('subjects'))
+
 
 @app.route('/grades')
 def grades():
@@ -173,6 +207,7 @@ def grades():
     conn.close()
     return render_template('grades.html', grades=grades, search=search)
 
+
 @app.route('/grades/add', methods=['GET', 'POST'])
 def add_grade():
     conn = get_db_connection()
@@ -189,6 +224,7 @@ def add_grade():
     subjects = conn.execute('SELECT * FROM Subject').fetchall()
     conn.close()
     return render_template('add_grade.html', students=students, subjects=subjects)
+
 
 @app.route('/grades/edit/<int:id>', methods=['GET', 'POST'])
 def edit_grade(id):
@@ -209,6 +245,7 @@ def edit_grade(id):
     conn.close()
     return render_template('edit_grade.html', grade=grade, students=students, subjects=subjects)
 
+
 @app.route('/grades/delete/<int:id>')
 def delete_grade(id):
     conn = get_db_connection()
@@ -217,6 +254,7 @@ def delete_grade(id):
     conn.close()
     flash('Grade deleted successfully!', 'success')
     return redirect(url_for('grades'))
+
 
 @app.route('/attendance')
 def attendance():
@@ -238,6 +276,7 @@ def attendance():
     conn.close()
     return render_template('attendance.html', attendance=attendance, search=search)
 
+
 @app.route('/attendance/add', methods=['GET', 'POST'])
 def add_attendance():
     conn = get_db_connection()
@@ -253,6 +292,7 @@ def add_attendance():
     students = conn.execute('SELECT * FROM Student').fetchall()
     conn.close()
     return render_template('add_attendance.html', students=students)
+
 
 @app.route('/attendance/edit/<int:id>', methods=['GET', 'POST'])
 def edit_attendance(id):
@@ -272,6 +312,7 @@ def edit_attendance(id):
     conn.close()
     return render_template('edit_attendance.html', attendance=attendance, students=students)
 
+
 @app.route('/attendance/delete/<int:id>')
 def delete_attendance(id):
     conn = get_db_connection()
@@ -280,6 +321,7 @@ def delete_attendance(id):
     conn.close()
     flash('Attendance record deleted successfully!', 'success')
     return redirect(url_for('attendance'))
+
 
 @app.route('/report-cards')
 def report_cards():
@@ -327,6 +369,7 @@ def report_cards():
         })
     conn.close()
     return render_template('report_cards.html', report_data=report_data)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
